@@ -1,0 +1,124 @@
+---
+title: "Introduction to High-Performance Compute"
+subtitle: "Overview"
+author: "Manuel Holtgrewe"
+format:
+  revealjs:
+    slide-number: true
+    theme: solarized
+    navigation-mode: vertical
+    controls-layout: bottom-right
+    controls-tutorial: false
+---
+
+# Course Overview
+
+- Welcome to the course!
+- Introduction to High-Performance Computing (HPC)
+- Focus on biomedical and medical research applications
+- Duration: [duration of the course]
+- Instructor: Manuel Holtgrewe
+- Contact Information: manuel.holtgrewe@bih-charite.de
+
+# Course Objectives
+
+- Understand the fundamentals of High-Performance Computing (HPC)
+- Learn how to utilize HPC systems for biomedical and medical research
+- Gain practical skills in Linux command line, HPC job submission, and scientific programming
+- Explore parallel computing techniques and their applications
+- Gain knowledge in advanced topics such as GPU programming
+
+![](img/00-outline/cpus_in_a_grid.png){.absolute top=0 right=0 width="350" height="300"}
+
+# Participant Background
+
+- Briefly introduce yourself:
+  - Name
+  - Background (biomedical, medical research, programming experience, etc.)
+  - Expectations from the course
+
+# What is High-Performance Computing?
+
+- Definition of High-Performance Computing (HPC)
+- Role of HPC in biomedical and medical research
+
+## Definition of High-Performance Computing (HPC)
+
+- High-Performance Computing (HPC) refers to the use of advanced computing techniques and technologies to solve complex computational problems efficiently.
+- HPC involves leveraging parallel processing, large-scale data analysis, and specialized hardware to achieve high computational performance.
+- HPC systems typically consist of multiple computing nodes connected through a high-speed network, working together to process massive amounts of data.
+- HPC enables researchers and scientists to tackle computationally intensive tasks that would be infeasible or time-consuming with traditional computing resources.
+- HPC finds applications in a wide range of fields, including scientific research, engineering simulations, data analytics, and artificial intelligence.
+- Image description: An illustration depicting interconnected processors or a supercomputer to represent the concept of high-performance computing.
+
+## Role of HPC in biomedical and medical research
+
+- High-Performance Computing (HPC) plays a crucial role in advancing biomedical and medical research by enabling researchers to tackle complex computational challenges.
+- HPC allows for the processing and analysis of large-scale genomic, proteomic, and imaging datasets, leading to insights into diseases and potential treatments.
+- HPC facilitates the simulation and modeling of biological systems, such as protein folding, drug interactions, and disease progression, to accelerate drug discovery and development.
+- HPC enables personalized medicine by analyzing individual genomic profiles, optimizing treatment plans, and predicting treatment outcomes.
+- HPC supports computational biology and bioinformatics research, including genome sequencing, comparative genomics, and transcriptomics analysis.
+- Image description: An image depicting scientists or researchers utilizing HPC resources to analyze genomic or medical data.
+
+# Why Use High-Performance Computing?
+
+- Benefits of HPC in research:
+  - Faster execution of complex computational tasks
+  - Ability to process and analyze large datasets
+  - Parallel computing for accelerated simulations or modeling
+  - Enable more accurate and precise research outcomes
+
+# HPC Systems and Architecture
+
+- Overview of HPC systems and architecture:
+  - Computing nodes
+  - Shared memory vs. distributed memory systems
+  - Interconnects and network topology
+  - Job schedulers and resource management
+
+# Linux Command Line and SSH
+
+- Importance of Linux command line for HPC
+- Basics of using the command line
+- Introduction to SSH for remote access to HPC systems
+
+# Scientific Programming Tools
+
+- Introduction to programming tools for scientific computing:
+  - Python: NumPy, ~~Pandas~~ Polars, scikit-learn
+  - R: data.table, dplyr, caret
+- Overview of their applications in biomedical and medical research
+
+# Course Structure and Schedule
+
+- Overview of the course structure:
+  - Section 1: Introduction to HPC
+  - Section 2: Linux Command Line and SSH
+  - Section 3: Bash Shell and Scripting
+  - Section 4: SLURM Job Scheduler
+  - Section 5: Scientific Programming with Python/R
+  - Optional: Section 6: Advanced Topics
+- Schedule and duration for each section
+
+# Icebreaker Activity
+
+- Let's get to know each other!
+- Icebreaker activity instructions
+
+# Questions and Discussion
+
+- Open the floor for any questions or discussion
+- Encourage participants to ask questions or share their thoughts
+
+# Conclusion and Next Steps
+
+- Recap of the topics covered in this session
+- Next steps: Upcoming sessions and what to expect
+- Thank participants for their participation
+
+# Thank You and Goodbye
+
+- Thank participants for attending the introductory session
+- Provide contact information for further inquiries or support
+- Express excitement for the upcoming sessions
+
