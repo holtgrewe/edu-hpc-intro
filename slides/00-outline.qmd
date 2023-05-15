@@ -2,79 +2,295 @@
 title: "Introduction to High-Performance Compute"
 subtitle: "Overview"
 author: "Manuel Holtgrewe"
+institute: "Core Unit Bioinformatics, Berlin Institute of Health"
 format:
   revealjs:
     slide-number: true
-    theme: solarized
     navigation-mode: vertical
     controls-layout: bottom-right
     controls-tutorial: false
+    include-in-header:
+      text: |
+        <style>
+        .center-h {
+          text-align: center;
+        }
+        </style>
 ---
 
 # Course Overview
 
-- Welcome to the course!
+- Welcome to the course! 👋
 - Introduction to High-Performance Computing (HPC)
 - Focus on biomedical and medical research applications
+
+::: {.center-h}
+🔬 ⌨️ 🧬
+:::
+
+. . .
+
 - Duration: [duration of the course]
 - Instructor: Manuel Holtgrewe
 - Contact Information: manuel.holtgrewe@bih-charite.de
 
 # Course Objectives
 
-- Understand the fundamentals of High-Performance Computing (HPC)
-- Learn how to utilize HPC systems for biomedical and medical research
-- Gain practical skills in Linux command line, HPC job submission, and scientific programming
-- Explore parallel computing techniques and their applications
-- Gain knowledge in advanced topics such as GPU programming
+:::: {.columns}
 
-![](img/00-outline/cpus_in_a_grid.png){.absolute top=0 right=0 width="350" height="300"}
+::: {.column width="60%"}
+- Fundamentals of HPC ...
+- ... for biomedical research
+- Practical skills in
+    - Linux command line
+    - HPC job submission
+    - Scientific programming
+- Parallel computing techniques and their applications
+:::
 
-# Participant Background
+::: {.column width="40%"}
+![](img/00-outline/hpc-unsplash-jkuR9QteDGY.jpg)
+:::
+
+::::
+
+# Participant Background 🤸
 
 - Briefly introduce yourself:
   - Name
-  - Background (biomedical, medical research, programming experience, etc.)
+  - Background (biomedical/computational, programming experience, etc.)
   - Expectations from the course
 
 # What is High-Performance Computing?
 
-- Definition of High-Performance Computing (HPC)
+- Attempt at a definition
 - Role of HPC in biomedical and medical research
+- Trade-Offs
 
-## Definition of High-Performance Computing (HPC)
+## Attempt at a Definition
 
-- High-Performance Computing (HPC) refers to the use of advanced computing techniques and technologies to solve complex computational problems efficiently.
-- HPC involves leveraging parallel processing, large-scale data analysis, and specialized hardware to achieve high computational performance.
-- HPC systems typically consist of multiple computing nodes connected through a high-speed network, working together to process massive amounts of data.
-- HPC enables researchers and scientists to tackle computationally intensive tasks that would be infeasible or time-consuming with traditional computing resources.
-- HPC finds applications in a wide range of fields, including scientific research, engineering simulations, data analytics, and artificial intelligence.
-- Image description: An illustration depicting interconnected processors or a supercomputer to represent the concept of high-performance computing.
+HPC ...
 
-## Role of HPC in biomedical and medical research
+::: {.incremental}
 
-- High-Performance Computing (HPC) plays a crucial role in advancing biomedical and medical research by enabling researchers to tackle complex computational challenges.
-- HPC allows for the processing and analysis of large-scale genomic, proteomic, and imaging datasets, leading to insights into diseases and potential treatments.
-- HPC facilitates the simulation and modeling of biological systems, such as protein folding, drug interactions, and disease progression, to accelerate drug discovery and development.
-- HPC enables personalized medicine by analyzing individual genomic profiles, optimizing treatment plans, and predicting treatment outcomes.
-- HPC supports computational biology and bioinformatics research, including genome sequencing, comparative genomics, and transcriptomics analysis.
-- Image description: An image depicting scientists or researchers utilizing HPC resources to analyze genomic or medical data.
+- refers to [advanced computing techniques]{.fragment .highlight-red} & technologies to solve [complex computational problems]{.fragment .highlight-red} efficiently
+- involves leveraging [parallel processing]{.fragment .highlight-red}, [large-scale data analysis]{.fragment .highlight-red}, and [specialized hardware]{.fragment .highlight-red}
+    - to achieve [high computational performance]{.fragment .highlight-red}
+- systems consist of [multiple computing nodes]{.fragment .highlight-red} connected through a [high-speed network]{.fragment .highlight-red}, [working together]{.fragment .highlight-red}
+- enables [researcher]{.fragment .highlight-red} to tackle [computationally intensive tasks]{.fragment .highlight-red} that would be infeasible or too time-consuming otherwise
+- finds applications in a [wide range of fields]{.fragment .highlight-red}, including scientific research, engineering, data analytics, and machine learning
 
-# Why Use High-Performance Computing?
+:::
 
-- Benefits of HPC in research:
-  - Faster execution of complex computational tasks
-  - Ability to process and analyze large datasets
-  - Parallel computing for accelerated simulations or modeling
-  - Enable more accurate and precise research outcomes
+## Role of HPC in Biomedical Research
+
+HPC ...
+
+::: {.incremental}
+
+- ... plays a crucial role by enabling tacking computational challenges
+- ... allows for analyzing large-scale genomics, proteomics, ..., datasets
+    - leading to insights into diseases and potential treatments
+- ... facilitates simulations such as protein folding, molecule interactions, etc.
+- ... enables the efficient training of large-scale statistical and machine learning models
+
+:::
+
+## Trade-Offs of HPC
+
+::::: {.incremental}
+
+:::: {.columns}
+
+::: {.column width="50%"}
+### Advantages
+
+- fast execution of complex computational tasks
+- process and analyze large data sets
+- fast and large storage systems
+- [MORE POWER]{.fragment .highlight-red} 🦾
+:::
+
+::: {.column width="50%"}
+### Drawbacks
+
+- learning curve / entry barrier
+- usually shared with other users
+- expensive to buy/operate
+- high power usage/CO<sub>2</sub> footprint ([reference](https://www.bcs.org/articles-opinion-and-research/carbon-footprint-the-not-so-hidden-cost-of-high-performance-computing/))
+- ["why is my job killed/crashing/not running?"]{.fragment .highlight-red} 😶‍🌫️
+:::
+
+::::
+
+:::::
+
+<hr>
+
+There is no free lunch!
+
+## What is Your Take? 🤸
+
+__"Blitzlicht" Instructions__
+
+- answer one of the questions
+- do not repeat a previous answer
+
+. . .
+
+__Questions__
+
+- which plus/minus points have you hit so far?
+- what do you hope / fear?
 
 # HPC Systems and Architecture
 
 - Overview of HPC systems and architecture:
-  - Computing nodes
+  - Compute nodes
   - Shared memory vs. distributed memory systems
   - Interconnects and network topology
   - Job schedulers and resource management
+
+## Compute Nodes (1)
+
+"Same-same (as your laptop), but different."
+
+::::: {.columns}
+
+:::: {.column width="50%"}
+
+::: {.incremental}
+
+- 2+ sockets with
+    - many-cores CPUs
+    - e.g., 2 x 24 x 2 = 96 threads
+- high memory (e.g., 200+ GB)
+- fast network interface card
+    - "legacy": 10GbE (x2)
+    - modern: 25GbE (x2)
+
+- local disks
+    - HDD or solid state SSD/NVME
+:::
+
+::::
+
+:::: {.column width="50%"}
+
+::: {.r-stack}
+![](img/00-outline/hpc-node-photo.jpg)
+
+![](img/00-outline/hpc-node-schematics.png){.fragment}
+<!-- Figure source: Haarhoff, Daniel, and Lukas Arnold. "Performance analysis and shared memory parallelisation of FDS." Proceedings of Fire and Evacuation Modeling Technical Conference. 2014. -->
+:::
+
+::::
+
+:::::
+
+## Compute Nodes (2)
+
+More differences from "consumer-grade" hardware:
+
+::: {.incremental}
+
+- error correcting memory (bit flips are real)
+- stronger fans
+- redundant power control
+- redundant disks
+:::
+
+::: {.callout-tip title="You are not the admin"}
+no root/admin access, no `sudo`
+:::
+
+## Shared vs. Distributed Memory
+
+::::: {.incremental}
+
+:::: {.columns}
+
+::: {.column width="50%"}
+### Shared Memory
+
+- aka "in-core" parallel
+- aka "multi-threading"
+
+```{mermaid}
+graph BT
+    sq1[thread 1] --> ci(memory address)
+    sq2[thread 2] --> ci(memory address)
+```
+
+- ➕ low overhead
+- ➕ easy to get started
+- ➖ implicit communication, easy to make errors
+- ➖ do you __really__ understand your memory model?
+
+:::
+
+::: {.column width="50%"}
+### Distributed Memory
+
+- aka "out-of-core" parallelism
+- aka "message-passing"
+
+```{mermaid}
+graph LR
+    sq1[thread 1] -->|How are you?| sq2[thread 2]
+    sq2[thread 2] -->|- fine, thank!| sq1[thread 1]
+```
+
+- ➕ explicit communication, fewer wrong assumptions(?)
+- ➕ model scales up better for larger systems
+- ➖ harder to get started
+- ➖ more complex primitives
+
+:::
+
+::::
+
+:::::
+
+## What is Your Experience? 🤸
+
+__"Blitzlicht" Instructions__
+
+- answer both of the questions
+- do not repeat a previous answer exactly
+
+. . .
+
+__Questions__
+
+- have you used shared/distributed memory parallelism before?
+- what is your experience/hope?
+
+## Node Interconnect
+
+<!-- continue here-->
+
+- single nodes useless
+- interconnect important
+- storage nodes "behind the scenes"
+- scheduler etc. "behind the scenes"
+
+## Cluster Architecture Overview
+
+- head nodes
+    - login node
+    - transfer nodes
+- compute nodes
+    - generic: cpu
+    - specialized: high-mem/gpus
+- different features (cpu instruction sets, ...)
+
+## Job Scheduler and Resource Management
+
+- resources: cpu/memory/gpu
+- distributed in time slicing manner
+- knows all resources
+- assigns them to users
 
 # Linux Command Line and SSH
 
