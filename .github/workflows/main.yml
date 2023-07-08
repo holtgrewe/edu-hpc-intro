@@ -16,6 +16,7 @@ jobs:
 
       - name: Render all slide decks
         run: |
+          cd slides
           for f in *.qmd; do
             quarto render $f
           done
