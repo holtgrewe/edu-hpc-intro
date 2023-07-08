@@ -18,18 +18,19 @@ jobs:
 
       - name: Render all slide decks
         run: |
-          mkdir -p .//output
+          mkdir -p ./output
           cd slides
           for f in *.qmd; do
             quarto render $f
-            cp ${f%.qmd}.html .//output
+            cp ${f%.qmd}.html ./output
           done
+          ls -lh output
         shell: bash -x -euo pipefail {0}
 
       - name: Generate Directory Listings
         uses: jayanta525/github-pages-directory-listing@v3.0.0
         with:
-          FOLDER: .//output
+          FOLDER: ./output
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
