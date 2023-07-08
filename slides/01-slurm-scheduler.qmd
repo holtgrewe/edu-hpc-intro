@@ -1,0 +1,164 @@
+---
+title: "Introduction to HPC"
+subtitle: "Slurm Scheduler and Resource Manager"
+
+author:
+  - name: Manuel Holtgrewe
+    orcid: 0000-0002-3051-1763
+    affiliations:
+      - ref: bihealth
+affiliations:
+  - id: bihealth
+    name: Berlin Institute of Health at Charité
+    address: Charitéplatz 1,
+    postal-code: 10117
+    city: Berlin
+    country: Germany
+title-slide-attributes:
+  data-background-size: contain
+  data-background-image: themes/bih/bih_bg_logo.png
+format:
+  revealjs:
+    theme:
+      - default
+      - themes/bih/theme.scss
+    slide-number: true
+    navigation-mode: linear
+    controls-layout: bottom-right
+    controls-tutorial: false
+    smaller: true
+    self-contained: true
+    # Override default "normal" size to get 16:9 aspect ratio.
+    width: 1200
+    height: 675
+    margin: 0.05
+    # Enable local plugins.
+    revealjs-plugins:
+      - plugins/fullscreen
+---
+
+## Session Overview
+
+__Aims__
+
+- Understand the role of Slurm as a scheduler and resource manager.
+- Learn how to use Slurm to run jobs on the cluster and ...
+- ... how to interrogate Slurm for cluster and job status.
+
+__Actions__
+
+- Submit interactive and batch jobs.
+- Write Slurm job scripts.
+- Query slurm with `squeue`, `sinfo` and `scontrol`.
+- Bring your own jobs!
+
+## Documentation Resources
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+![](img/01-slurm/screenshot-hpc-docs.png)
+
+[BIH HPC Docs](https://hpc-docs.cubi.bihealth.org/slurm/overview/)
+
+:::
+
+::: {.column width="50%"}
+
+![](img/01-slurm/screenshot-slurm-docs.png)
+
+[Official Slurm Documentation](https://slurm.schedmd.com/documentation.html)
+
+:::
+
+::::
+
+🤓 Google/Bing will help to find more
+
+👍 User Forum at https://hpc-talk.cubi.bihealth.org!
+
+## What is a Scheduler?
+
+__Resource Manager__
+
+- Slurm keeps a ledger of our node and job resources
+  - [available]{.fragment .highlight-red} CPUs, memory, GPUs on each node
+  - jobs and their [required]{.fragment .highlight-red} resources
+  - currently running jobs and their [used]{.fragment .highlight-red} resources
+
+__Job Scheduler__
+
+- Slurm manages a schedule of submitted jobs
+  - Freshly submitted jobs are subjected to [quick scheduling]{.fragment .highlight-red}
+  - Periodically, Slurm will run [full backfill scheduling]{.fragment .highlight-red}
+
+## Our First Interactive Job 🎬
+
+```
+srun --pty --time --partition=training --mem=10G --cpus-per-task=1 bash -i
+```
+
+## Our First Batch Job 🎬
+
+## Looking at the Scheduler 🎬
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+- sdiag
+- squeue
+- sinfo
+- sprio
+
+:::
+
+::: {.column width="50%"}
+
+:::
+
+::::
+
+## A dive into `scontrol show job`
+
+## Slurm Partitions
+
+## Tuning `squeue` Output
+
+## Useful `.bashrc` Aliases
+
+## The Role of Logging
+
+## Neat Trick: `sattach`
+
+## Ins and Outs of Job Scripts
+
+## Submitting GPU Jobs
+
+## Submitting High Memory Jobs
+
+## Canceling Jobs with `scancel`
+
+## Query Accounting Info with `sacct`
+
+## QOS and `sacctmgr`
+
+## Job Dependencies with `sbatch`
+
+## X11 Forwarding with Slurm
+
+## Reservations
+
+## Bonus Topics  {.inverse background-color="#70ADC1"}
+
+- Using Apptainer (fka Singularity)
+  - Running `.sif` files with Apptainer
+  - Building `.sif` files from Docker containers
+  - Building `.sif` files from scratch
+
+## Running `.sif` Image Files
+
+## Converting Docker Image to `.sif` Files
+
+## Building `.sif` Images from Scratch
