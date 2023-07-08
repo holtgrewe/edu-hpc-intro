@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - ci-build-to-gh-pages
+      - ci-build-to-pages
 
 jobs:
   Render-and-Deploy:
