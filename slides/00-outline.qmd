@@ -1,5 +1,5 @@
 ---
-title: "Introduction to HPC"
+title: "HPC in Biomedical Research"
 subtitle: "Overview"
 
 author:
@@ -49,9 +49,22 @@ format:
 
 . . .
 
-- Duration: [duration of the course]
+- Duration: 5 days
 - Instructor: Manuel Holtgrewe
 - Contact Information: manuel.holtgrewe@bih-charite.de
+
+## Course Structure
+
+- Monday to Thursday
+  - __8:30-10:00__ -- Seminar
+  - __10:30-15:15__ -- "Open lab" (incl. 1h lunch break)
+- Friday:
+  - __14:00-15:30__ -- Presentations
+
+__Participant Presentations__
+
+- short (5min) presentation with slides on how you plan what you have learned in your PhD project.
+- short (5min) discussion
 
 ## Course Objectives
 
@@ -374,6 +387,18 @@ sequenceDiagram
     Compute Node-)+Scheduler: job complete
 ```
 
+
+## Last but not least... {.inverse background-color="#70ADC1"}
+
+We should make sure that you have access to the HPC system...
+
+## Connecting to the HPC
+
+- Windows Users
+  - Should follow the [hpc-docs instructions](https://hpc-docs.cubi.bihealth.org/connecting/ssh-client-windows/)
+- Linux / Mac Users
+  - Should be able to do `ssh -l $USER_{c,m} hpc-login-1.cubi.bihealth.org
+
 ## Further Sessions
 
 0. Overview (this)
@@ -393,3 +418,20 @@ __Recap__
 - distributed file systems
 - a first peek at job schedulers
 - further sessions
+
+## Bonus Content / Lab Tasks
+
+Please spend the rest of the day setting up or learning about ...
+
+- `tmux` (or `screen`)
+  - e.g., read [this tutorial](https://www.hamvocke.com/blog/a-quick-and-easy-guide-to-tmux/)
+- `git`
+  - e.g., read [gittutorial](https://git-scm.com/docs/gittutorial)
+  - [Getting Started with GitHub](https://docs.github.com/en/get-started/quickstart/hello-world)
+- `nano`
+  - [tutorial](https://www.howtogeek.com/42980/the-beginners-guide-to-nano-the-linux-command-line-text-editor/)
+- `vim`
+  - [tutorial](https://www.openvim.com/)
+- BIH HPC Resources
+  - [hpc-talk](https://hpc-talk.cubi.bihealth.org/)
+  - [hpc-docs](https://hpc-docs.cubi.bihealth.org/)
