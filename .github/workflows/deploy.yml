@@ -6,9 +6,24 @@ on:
       - main
       - ci-build-to-pages
 
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 jobs:
-  Quarto-Render:
+  Render-and-Deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -26,6 +41,9 @@ jobs:
           done
         shell: bash -x -euo pipefail {0}
 
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+
       - name: Generate Directory Listings
         uses: jayanta525/github-pages-directory-listing@v3.0.0
         with:
@@ -36,20 +54,6 @@ jobs:
         with:
           path: /tmp/output
 
-  Deploy:
-    needs: Quarto-Render
-    runs-on: ubuntu-latest
-    permissions:
-      pages: write      # to deploy to Pages
-      id-token: write   # to verify the deployment originates from an appropriate source
-
-    # Deploy to the github-pages environment
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
-    # Specify runner + deployment step
-    steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v1
+        uses: actions/deploy-pages@v2
