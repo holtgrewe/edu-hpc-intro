@@ -44,13 +44,14 @@ __Aims__
 - Understand the role of Slurm as a scheduler and resource manager.
 - Learn how to use Slurm to run jobs on the cluster and ...
 - ... how to interrogate Slurm for cluster and job status.
+- Using Conda and Apptainer for portable software installations.
 
 __Actions__
 
 - Submit interactive and batch jobs.
 - Write Slurm job scripts.
 - Query slurm with `squeue`, `sinfo` and `scontrol`.
-- Bring your own jobs!
+- Using Conda and Apptainer
 
 ## Documentation Resources
 
@@ -77,6 +78,12 @@ __Actions__
 🤓 Google/Bing will help to find more
 
 👍 User Forum at https://hpc-talk.cubi.bihealth.org!
+
+## Slurm {.inverse background-color="#70ADC1"}
+
+- Introduction
+- Running Interactive and Batch Jobs
+- Querying job and cluster status
 
 ## What is a Scheduler?
 
@@ -150,15 +157,41 @@ srun --pty --time --partition=training --mem=10G --cpus-per-task=1 bash -i
 
 ## Reservations
 
-## Bonus Topics  {.inverse background-color="#70ADC1"}
+## Conda {.inverse background-color="#70ADC1"}
 
-- Using Apptainer (fka Singularity)
-  - Running `.sif` files with Apptainer
-  - Building `.sif` files from Docker containers
-  - Building `.sif` files from scratch
+- Introduction
+- Installation
+- Managing environments and instaling software
+
+## Apptainer {.inverse background-color="#70ADC1"}
+
+- Introduction
+- Running `.sif` files with Apptainer
+- Building `.sif` files from Docker containers
+- Building `.sif` files from scratch
 
 ## Running `.sif` Image Files
 
 ## Converting Docker Image to `.sif` Files
 
 ## Building `.sif` Images from Scratch
+
+## Bring Your Own Project {.inverse background-color="#70ADC1"}
+
+🫵 Where can you apply what you have learned in your PhD project?
+
+## This is not the end...
+
+... but all for this session
+
+__Recap__
+
+- Slurm
+  - Introduction
+  - Interactive and Batch Jobs
+  - Query slurm for job and cluster status
+- Conda
+  - Installation and managing environments
+- Apptainer
+  - Introduction
+  - Building and Running Images
