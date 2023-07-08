@@ -18,11 +18,11 @@ jobs:
 
       - name: Render all slide decks
         run: |
-          mkdir -p ./output
+          mkdir -p slides/output
           cd slides
           for f in *.qmd; do
             quarto render $f
-            cp ${f%.qmd}.html ./output
+            cp ${f%.qmd}.html output/${f%.qmd}.html
           done
           ls -lh output
         shell: bash -x -euo pipefail {0}
