@@ -19,4 +19,4 @@ jobs:
           for f in *.qmd; do
             quarto render $f
           done
-        shell: bash -x -euo pipefail
+        shell: bash -x -euo pipefail {0}
