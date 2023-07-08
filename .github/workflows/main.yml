@@ -13,3 +13,10 @@ jobs:
 
       - name: Install Quarto
         uses: quarto-dev/quarto-actions/setup@v2
+
+      - name: Render all slide decks
+        run: |
+          for f in *.qmd; do
+            quarto render $f
+          done
+        shell: bash -x -euo pipefail
