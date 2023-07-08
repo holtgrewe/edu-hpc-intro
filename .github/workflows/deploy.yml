@@ -1,0 +1,54 @@
+name: GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+      - ci-build-to-pages
+
+jobs:
+  Quarto-Render:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+
+      - name: Render all slide decks
+        run: |
+          mkdir -p /tmp/output
+          cd slides
+          for f in *.qmd; do
+            quarto render --output=/tmp/output/${f%.qmd}.html $f
+          done
+        shell: bash -x -euo pipefail {0}
+
+      - name: Generate Directory Listings
+        uses: jayanta525/github-pages-directory-listing@v3.0.0
+        with:
+          FOLDER: /tmp/output
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: /tmp/output
+
+  Deploy:
+    needs: Quarto-Render
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+
+    # Deploy to the github-pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    # Specify runner + deployment step
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
