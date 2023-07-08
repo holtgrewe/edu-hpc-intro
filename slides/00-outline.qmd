@@ -1,24 +1,43 @@
 ---
-title: "Introduction to High-Performance Compute"
+title: "Introduction to HPC"
 subtitle: "Overview"
-author: "Manuel Holtgrewe"
-institute: "Core Unit Bioinformatics, Berlin Institute of Health"
+
+author:
+  - name: Manuel Holtgrewe
+    orcid: 0000-0002-3051-1763
+    affiliations:
+      - ref: bihealth
+affiliations:
+  - id: bihealth
+    name: Berlin Institute of Health at Charité
+    address: Charitéplatz 1,
+    postal-code: 10117
+    city: Berlin
+    country: Germany
+title-slide-attributes:
+  data-background-size: contain
+  data-background-image: themes/bih/bih_bg_logo.png
 format:
   revealjs:
+    theme:
+      - default
+      - themes/bih/theme.scss
     slide-number: true
-    navigation-mode: vertical
+    navigation-mode: linear
     controls-layout: bottom-right
     controls-tutorial: false
-    include-in-header:
-      text: |
-        <style>
-        .center-h {
-          text-align: center;
-        }
-        </style>
+    smaller: true
+    self-contained: true
+    # Override default "normal" size to get 16:9 aspect ratio.
+    width: 1200
+    height: 675
+    margin: 0.05
+    # Enable local plugins.
+    revealjs-plugins:
+      - plugins/fullscreen
 ---
 
-# Course Overview
+## Course Overview
 
 - Welcome to the course! 👋
 - Introduction to High-Performance Computing (HPC)
@@ -34,11 +53,8 @@ format:
 - Instructor: Manuel Holtgrewe
 - Contact Information: manuel.holtgrewe@bih-charite.de
 
-# Course Objectives
+## Course Objectives
 
-:::: {.columns}
-
-::: {.column width="60%"}
 - Fundamentals of HPC ...
 - ... for biomedical research
 - Practical skills in
@@ -46,30 +62,34 @@ format:
     - HPC job submission
     - Scientific programming
 - Parallel computing techniques and their applications
-:::
 
-::: {.column width="40%"}
-![](img/00-outline/hpc-unsplash-jkuR9QteDGY.jpg)
-:::
 
-::::
-
-# Participant Background 🤸
+## Participant Background 🤸
 
 - Briefly introduce yourself:
   - Name
   - Background (biomedical/computational, programming experience, etc.)
   - Expectations from the course
 
-# What is High-Performance Computing?
+## Prerequisites 🎓
+
+__You should have experience with...__
+
+- ... the Linux operating system 🐧
+- ... the Bash shell (interactive, scripting) 🐚
+- ... using the Secure Shell (SSH) 🛡️
+- ... one programming language (ideally: Python 🐍)
+- ... (some exposure to) scientific programming / machine learning
+
+__Also: you need an account on the BIH HPC 🔑__
+
+## What is High-Performance Computing? {.inverse background-color="#70ADC1"}
 
 - Attempt at a definition
 - Role of HPC in biomedical and medical research
 - Trade-Offs
 
-## Attempt at a Definition
-
-HPC ...
+## Attempt at a Definition: HPC ...
 
 ::: {.incremental}
 
@@ -77,18 +97,16 @@ HPC ...
 - involves leveraging [parallel processing]{.fragment .highlight-red}, [large-scale data analysis]{.fragment .highlight-red}, and [specialized hardware]{.fragment .highlight-red}
     - to achieve [high computational performance]{.fragment .highlight-red}
 - systems consist of [multiple computing nodes]{.fragment .highlight-red} connected through a [high-speed network]{.fragment .highlight-red}, [working together]{.fragment .highlight-red}
-- enables [researcher]{.fragment .highlight-red} to tackle [computationally intensive tasks]{.fragment .highlight-red} that would be infeasible or too time-consuming otherwise
+- enables [researchers]{.fragment .highlight-red} to tackle [computationally intensive tasks]{.fragment .highlight-red} that would be infeasible or too time-consuming otherwise
 - finds applications in a [wide range of fields]{.fragment .highlight-red}, including scientific research, engineering, data analytics, and machine learning
 
 :::
 
-## Role of HPC in Biomedical Research
-
-HPC ...
+## HPC in Biomedical Research
 
 ::: {.incremental}
 
-- ... plays a crucial role by enabling tacking computational challenges
+- ... plays a crucial role by enabling tackling of computational challenges
 - ... allows for analyzing large-scale genomics, proteomics, ..., datasets
     - leading to insights into diseases and potential treatments
 - ... facilitates simulations such as protein folding, molecule interactions, etc.
@@ -103,7 +121,7 @@ HPC ...
 :::: {.columns}
 
 ::: {.column width="50%"}
-### Advantages
+__Advantages__
 
 - fast execution of complex computational tasks
 - process and analyze large data sets
@@ -112,7 +130,7 @@ HPC ...
 :::
 
 ::: {.column width="50%"}
-### Drawbacks
+__Drawbacks__
 
 - learning curve / entry barrier
 - usually shared with other users
@@ -123,33 +141,46 @@ HPC ...
 
 ::::
 
-:::::
+::::
 
 <hr>
 
 There is no free lunch!
 
+::::
+
+:::::
+
 ## What is Your Take? 🤸
 
-__"Blitzlicht" Instructions__
+::: {.box-top-right .inverse}
+
+__"Blitzlicht" 📸__
 
 - answer one of the questions
 - do not repeat a previous answer
 
-. . .
+:::
 
-__Questions__
+__So far__
 
-- which plus/minus points have you hit so far?
-- what do you hope / fear?
+- have you benefited from advantages?
+- have you suffered from drawbacks?
 
-# HPC Systems and Architecture
+__From here on__
 
-- Overview of HPC systems and architecture:
-  - Compute nodes
-  - Shared memory vs. distributed memory systems
-  - Interconnects and network topology
-  - Job schedulers and resource management
+- what do you hope to gain from using HPC?
+- what risks do you see?
+
+## HPC Systems and Architecture  {.inverse background-color="#70ADC1"}
+
+- Compute nodes
+- Shared memory vs. distributed memory systems
+- Cluster architecture
+- Distributed file systems
+- Job schedulers and resource management
+
+⚠️ "Warning": just a quick and superficial overview ;-)
 
 ## Compute Nodes (1)
 
@@ -175,10 +206,10 @@ __Questions__
 
 ::::
 
-:::: {.column width="50%"}
+:::: {.column .pull-up-150 width="50%"}
 
 ::: {.r-stack}
-![](img/00-outline/hpc-node-photo.jpg)
+![](img/00-outline/hpc-node-photo.webp)
 
 ![](img/00-outline/hpc-node-schematics.png){.fragment}
 <!-- Figure source: Haarhoff, Daniel, and Lukas Arnold. "Performance analysis and shared memory parallelisation of FDS." Proceedings of Fire and Evacuation Modeling Technical Conference. 2014. -->
@@ -195,6 +226,7 @@ More differences from "consumer-grade" hardware:
 ::: {.incremental}
 
 - error correcting memory (bit flips are real)
+  - [Google in 2009](http://www.cs.toronto.edu/~bianca/papers/sigmetrics09.pdf): 8% of DIMMs have 1+ 1bit errors/year, 0.2% of DIMMs have 1+ 2bit errors/year
 - stronger fans
 - redundant power control
 - redundant disks
@@ -204,17 +236,16 @@ More differences from "consumer-grade" hardware:
 no root/admin access, no `sudo`
 :::
 
-## Shared vs. Distributed Memory
+## Shared vs. Distributed Memory {.even-smaller}
 
 ::::: {.incremental}
 
 :::: {.columns}
 
 ::: {.column width="50%"}
-### Shared Memory
+__Shared Memory__
 
-- aka "in-core" parallel
-- aka "multi-threading"
+- in-core/multi-threading
 
 ```{mermaid}
 graph BT
@@ -230,10 +261,9 @@ graph BT
 :::
 
 ::: {.column width="50%"}
-### Distributed Memory
+__Distributed Memory__
 
-- aka "out-of-core" parallelism
-- aka "message-passing"
+- out-of-core/message-passing
 
 ```{mermaid}
 graph LR
@@ -252,89 +282,114 @@ graph LR
 
 :::::
 
-## What is Your Experience? 🤸
+## Your Experience? 🤸
 
-__"Blitzlicht" Instructions__
+::: {.box-top-right .inverse}
 
-- answer both of the questions
-- do not repeat a previous answer exactly
+__"Blitzlicht" 📸__
 
-. . .
+- answer one of the questions
+- do not repeat a previous answer
 
-__Questions__
+:::
 
-- have you used shared/distributed memory parallelism before?
+- have you used shared/distributed<br>
+  memory parallelism before?
 - what is your experience/hope?
 
-## Node Interconnect
+## Cluster Architecture
 
-<!-- continue here-->
+:::: {.columns}
 
-- single nodes useless
-- interconnect important
-- storage nodes "behind the scenes"
-- scheduler etc. "behind the scenes"
+::: {.column width="50%"}
 
-## Cluster Architecture Overview
-
-- head nodes
-    - login node
-    - transfer nodes
+- head nodes (login/transfer)
 - compute nodes
     - generic: cpu
     - specialized: high-mem/gpus
-- different features (cpu instruction sets, ...)
+- storage cluster with parallel file system
+- scheduler to orchestrate jobs
+- __Network/Interconnect__
+
+:::
+
+::: {.column width="50%"}
+
+![](img/00-outline/cluster-overview.svg){width=80%}
+
+:::
+
+::::
+
+## Distributed File Systems (1)
+
+__"Same-same (as your laptop), but different."__
+
+- POSIX file system
+  - laptop: ext4/XFS/btrfs/ZFS/...
+  - distributed: CephFS, GPFS/SpectrumScale, BeeGFS, ...
+- POSIX guarantees
+  - `sync()` &rarr; visible everywhere
+  - `mkdir`/`open()` &rarr; visible everywhere
+  - files can be opened by multiple processes
+- ... harder to enforce in a distributed (multi-node) setting
+
+## Distributed File Systems (2)
+
+**Best Practices / Do's & Don'ts**
+
+- use modest sized directories (<10k entries)
+  - don't create one file per gene (or similar)
+  - create sub directories, e.g., `abcdef` &rarr; `ab/cdef`
+- don't splurge in file count
+  - don't create one file per NGS read (or similar)
+- avoid recursive traversal of large structures
+  - `ls -lR` will be slow!
+
+## Distributed File Systems (3)
+
+**Best Practices / Do's & Don'ts**
+
+- avoid small reads/writes and random access
+  - each I/O operation (IOP) needs to go through the network
+  - I/O systems are better at handling larger/sequential reads/writes
+- **DO** stream through your files
+  - `for each line/record in file: # do work`
+- **DO** use Unix `sort`
+- **DO** use Unix pipelines rather than temporary files
+  - e.g., `seqtk mergepe R1.fq R2.fq | bwa mem ref.fa | samtools sort | samtools view -O out.bam`
 
 ## Job Scheduler and Resource Management
 
-- resources: cpu/memory/gpu
-- distributed in time slicing manner
-- knows all resources
-- assigns them to users
+```{mermaid}
+sequenceDiagram
+    autonumber
+    User-)+Scheduler: sbatch $resource_args jobscript.sh
+    Scheduler->>+Scheduler: add job to queue
+    User-)+Scheduler: squeue / scontrol show job
+    Scheduler-->>+User: job status
+    Note right of Scheduler: scheduler loop
+    Scheduler-)Compute Node: start job
+    Compute Node->>Compute Node: execute job
+    Compute Node-)+Scheduler: job complete
+```
 
-# Linux Command Line and SSH
+## Further Sessions
 
-- Importance of Linux command line for HPC
-- Basics of using the command line
-- Introduction to SSH for remote access to HPC systems
+0. Overview (this)
+1. Slurm Job Scheduler and Resource Manager
+2. Scientific Programming with Python
+3. Reproducible Workflows with Snakemake
 
-# Scientific Programming Tools
+## This is not the end...
 
-- Introduction to programming tools for scientific computing:
-  - Python: NumPy, ~~Pandas~~ Polars, scikit-learn
-  - R: data.table, dplyr, caret
-- Overview of their applications in biomedical and medical research
+... but all for the first session
 
-# Course Structure and Schedule
+__Recap__
 
-- Overview of the course structure:
-  - Section 1: Introduction to HPC
-  - Section 2: Linux Command Line and SSH
-  - Section 3: Bash Shell and Scripting
-  - Section 4: SLURM Job Scheduler
-  - Section 5: Scientific Programming with Python/R
-  - Optional: Section 6: Advanced Topics
-- Schedule and duration for each section
-
-# Icebreaker Activity
-
-- Let's get to know each other!
-- Icebreaker activity instructions
-
-# Questions and Discussion
-
-- Open the floor for any questions or discussion
-- Encourage participants to ask questions or share their thoughts
-
-# Conclusion and Next Steps
-
-- Recap of the topics covered in this session
-- Next steps: Upcoming sessions and what to expect
-- Thank participants for their participation
-
-# Thank You and Goodbye
-
-- Thank participants for attending the introductory session
-- Provide contact information for further inquiries or support
-- Express excitement for the upcoming sessions
-
+- preqrequites
+- HPC in general and biomedical sciences
+- HPC hardware and cluster architecture
+- distributed file systems
+- a first peek at job schedulers
+- further sessions

@@ -1,0 +1,77 @@
+/*-- scss:defaults --*/
+
+@import url(https://fonts.googleapis.com/css?family=Fira+Sans);
+
+// fonts
+$font-family-sans-serif: "Fira Sans", sans-serif !default;
+
+$presentation-heading-color: #70ADC1;
+$presentation-title-slide-text-align: left;
+$presentation-font-smaller:0.85;
+
+$presentation-h1-font-size: 1.8em;
+$presentation-h2-font-size: 1.3em;
+$presentation-h3-font-size: 1.1em;
+$presentation-h4-font-size: 1.0em;
+
+
+$body-bg: #FFFFFF;
+$body-color: #4c626c;
+$link-color: #C12079;
+$code-color: #70ADC1;
+
+/*-- scss:rules --*/
+
+.title {
+  color: white !important;
+}
+
+.quarto-title-author {
+  color: white !important;
+}
+
+#title-slide {
+  transform: translate(0, -50%);
+}
+
+h3 {
+  color: #C12079 !important;
+}
+
+.inverse, .inverse h2, .inverse h1 {
+  color: white !important;
+}
+
+li::marker {
+  color: #C12079 !important;
+}
+
+.reveal .slide-number > a[href*='title-slide'] {
+  display: none;
+}
+
+.box-top-right {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0.5em;
+    font-size: 0.8em;
+    width: 300px;
+    background-color: #70ADC1;
+}
+
+.pull-up-100 {
+    margin-top: -100px;
+}
+
+.pull-up-150 {
+    margin-top: -150px;
+}
+
+.pull-up-200 {
+    margin-top: -200px;
+}
+
+.even-smaller {
+    font-size: 0.8em;
+}
