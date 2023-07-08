@@ -21,7 +21,7 @@ jobs:
           mkdir -p /tmp/output
           cd slides
           for f in *.qmd; do
-            quarto render --output /tmp/output/${f%.qmd}.html $f
+            quarto render $f --output /tmp/output/${f%.qmd}.html
           done
         shell: bash -x -euo pipefail {0}
 
