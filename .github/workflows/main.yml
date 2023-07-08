@@ -1,0 +1,15 @@
+name: CI
+
+on:
+  - push
+  - pull_request
+
+jobs:
+  Quarto-Render:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
