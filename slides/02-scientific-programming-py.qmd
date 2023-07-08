@@ -1,0 +1,81 @@
+---
+title: "Introduction to HPC"
+subtitle: "Scientific Programming with Python"
+
+author:
+  - name: Manuel Holtgrewe
+    orcid: 0000-0002-3051-1763
+    affiliations:
+      - ref: bihealth
+affiliations:
+  - id: bihealth
+    name: Berlin Institute of Health at Charité
+    address: Charitéplatz 1,
+    postal-code: 10117
+    city: Berlin
+    country: Germany
+title-slide-attributes:
+  data-background-size: contain
+  data-background-image: themes/bih/bih_bg_logo.png
+format:
+  revealjs:
+    theme:
+      - default
+      - themes/bih/theme.scss
+    slide-number: true
+    navigation-mode: linear
+    controls-layout: bottom-right
+    controls-tutorial: false
+    smaller: true
+    self-contained: true
+    # Override default "normal" size to get 16:9 aspect ratio.
+    width: 1200
+    height: 675
+    margin: 0.05
+    # Enable local plugins.
+    revealjs-plugins:
+      - plugins/fullscreen
+---
+
+## Session Overview
+
+__Aims__
+
+- Learn about important applications for Python in scientific programming ...
+- ... in the biomedical/life sciences.
+
+__Considered Applications__
+
+stable/)
+- "Data ~~science~~ wrangling" with [polars](https://www.pola.rs/)
+- Fast numerical computations with SciPy/Numpy
+- Interfacing with R for Statistics
+- Machine learning with [scikit-learn](https://scikit-learn.org/)
+- Deep Learning with Tensorflow
+
+## Data Wrangling with Polars {.inverse background-color="#70ADC1"}
+
+## Numerical Comuptation with SciPy/Numpy {.inverse background-color="#70ADC1"}
+
+## Interfacing with R for Statistics {.inverse background-color="#70ADC1"}
+
+## Machine Learning `scikit-learn` {.inverse background-color="#70ADC1"}
+
+## Deep Learning with Tensorflow {.inverse background-color="#70ADC1"}
+
+## Bring Your Own Project {.inverse background-color="#70ADC1"}
+
+🫵 Where can you apply what you have learned in your PhD project?
+
+## This is not the end...
+
+... but all for this session
+
+__Recap__
+
+- Overview of Python in scientific programming
+- Data wrangling with Polars
+- Numerical computations with SciPy/NumPy
+- Interfacing with R for Statistics
+- Machine Learning with `scikit-learn`
+- Deep Learning with Tensorflow
