@@ -1,0 +1,744 @@
+---
+title: "Introduction to HPC"
+subtitle: "Slurm Scheduler and Resource Manager"
+
+author:
+  - name: Manuel Holtgrewe
+    orcid: 0000-0002-3051-1763
+    affiliations:
+      - ref: bihealth
+affiliations:
+  - id: bihealth
+    name: Berlin Institute of Health at Charité
+    address: Charitéplatz 1,
+    postal-code: 10117
+    city: Berlin
+    country: Germany
+title-slide-attributes:
+  data-background-size: contain
+  data-background-image: themes/bih/bih_bg_logo.png
+format:
+  revealjs:
+    theme:
+      - default
+      - themes/bih/theme.scss
+    slide-number: true
+    navigation-mode: linear
+    controls-layout: bottom-right
+    controls-tutorial: false
+    smaller: true
+    self-contained: true
+    # Override default "normal" size to get 16:9 aspect ratio.
+    width: 1200
+    height: 675
+    margin: 0.05
+    # Enable local plugins.
+    revealjs-plugins:
+      - plugins/fullscreen
+---
+
+## Session Overview
+
+__Aims__
+
+- Understand the role of Slurm as a scheduler and resource manager.
+- Learn how to use Slurm to run jobs on the cluster and ...
+- ... how to interrogate Slurm for cluster and job status.
+- Using Conda and Apptainer for portable software installations.
+
+__Actions__
+
+- Submit interactive and batch jobs.
+- Write Slurm job scripts.
+- Query slurm with `squeue`, `sinfo` and `scontrol`.
+- Using Conda and Apptainer
+
+## Documentation Resources
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+![](img/01-slurm/screenshot-hpc-docs.png)
+
+[BIH HPC Docs](https://hpc-docs.cubi.bihealth.org/slurm/overview/)
+
+:::
+
+::: {.column width="50%"}
+
+![](img/01-slurm/screenshot-slurm-docs.png)
+
+[Official Slurm Documentation](https://slurm.schedmd.com/documentation.html)
+
+:::
+
+::::
+
+🤓 Google/Bing will help to find more
+
+👍 User Forum at https://hpc-talk.cubi.bihealth.org!
+
+
+## Your Experience? 🤸
+
+- Do you already
+  - have experience with HPC?
+  - know Slurm?
+  - know another job scheduler or resource manager?
+
+
+## Slurm {.inverse background-color="#70ADC1"}
+
+- Introduction
+- Running Interactive and Batch Jobs
+- Querying job and cluster status
+
+## What is a Scheduler?
+
+__Resource Manager__
+
+- Slurm keeps a ledger of our node and job resources
+  - [available]{.fragment .highlight-red} CPUs, memory, GPUs on each node
+  - jobs and their [required]{.fragment .highlight-red} resources
+  - currently running jobs and their [used]{.fragment .highlight-red} resources
+
+__Job Scheduler__
+
+- Slurm manages a schedule of submitted jobs
+  - Freshly submitted jobs are subjected to [quick scheduling]{.fragment .highlight-red}
+  - Periodically, Slurm will run [full backfill scheduling]{.fragment .highlight-red}
+
+
+## Our First Interactive Job: Submission 🎬
+
+```{.bash code-line-numbers="1|2-3|4"}
+holtgrem_c@hpc-login-1$ srun --pty --time=2:00:00 --partition=training \
+    --mem=10G --cpus-per-task=1 bash -i
+srun: job 14629328 queued and waiting for resources
+srun: job 14629328 has been allocated resources
+holtgrem_c@hpc-cpu-141$
+```
+
+- start interactive job with `srun`
+  - [--pty]{.fragment .highlight-red} connects the job's standard output and error streams to your shell
+  - [--time=2:00:00]{.fragment .highlight-red} makes your job last up to two hours
+  - [--partition=training]{.fragment .highlight-red} submits into the **training** partition
+  - [--mem=10G]{.fragment .highlight-red} allocates 10GB of RAM to your job
+  - [--cpus-per-task=1]{.fragment .highlight-red} allocates one thread for our task
+  - [bash -i]{.fragment .highlight-red} is the command to run ([**interactive bash**]{.fragment .highlight-red})
+- now: look at your job in another shell: 🤸
+  - `squeue -u $USER`
+  - `scontrol show job 14629328`
+
+## Looking at `squeue` 🤸
+
+What is the output of `squeue`?
+
+```{.bash code-line-numbers="1|2-3"}
+holtgrem_c@hpc-cpu-141$ squeue -u $USER
+   JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+14629328  training     bash holtgrem  R       1:40      1 hpc-cpu-141
+```
+
+More info with `--long`:
+
+```{.bash code-line-numbers="1|2|3-4"}
+Tue Jul 11 15:21:13 2023
+   JOBID PARTITION     NAME     USER    STATE       TIME TIME_LIMI  NODES NODELIST(REASON)
+14629328  training     bash holtgrem  RUNNING       3:20   2:00:00      1 hpc-cpu-141
+```
+
+👉 [Slurm Documentation: `squeue`](https://slurm.schedmd.com/squeue.html)
+
+## Looking at `scontrol show job` 🤸
+
+Let us look at `scontrol show job 14629328`
+
+```{.bash code-line-numbers="1|2|3|4|5|6|7-10|11|12|13|14-15|16|17|18|19|20|21|22|23|24"}
+holtgrem_c@hpc-cpu-141$ scontrol show job 14629328
+JobId=14629328 JobName=bash
+   UserId=holtgrem_c(100131) GroupId=hpc-ag-cubi(1005272) MCS_label=N/A
+   Priority=661 Nice=0 Account=hpc-ag-cubi QOS=normal
+   JobState=RUNNING Reason=None Dependency=(null)
+   Requeue=1 Restarts=0 BatchFlag=0 Reboot=0 ExitCode=0:0
+   RunTime=00:06:37 TimeLimit=02:00:00 TimeMin=N/A
+   SubmitTime=2023-07-11T15:17:37 EligibleTime=2023-07-11T15:17:37
+   AccrueTime=2023-07-11T15:17:37
+   StartTime=2023-07-11T15:17:53 EndTime=2023-07-11T17:17:53 Deadline=N/A
+   SuspendTime=None SecsPreSuspend=0 LastSchedEval=2023-07-11T15:17:53 Scheduler=Backfill
+   Partition=training AllocNode:Sid=hpc-login-1:3631083
+   ReqNodeList=(null) ExcNodeList=(null)
+   NodeList=hpc-cpu-141
+   BatchHost=hpc-cpu-141
+   NumNodes=1 NumCPUs=1 NumTasks=1 CPUs/Task=1 ReqB:S:C:T=0:0:*:*
+   TRES=cpu=1,mem=10G,node=1,billing=1
+   Socks/Node=* NtasksPerN:B:S:C=0:0:*:* CoreSpec=*
+   MinCPUsNode=1 MinMemoryNode=10G MinTmpDiskNode=0
+   Features=(null) DelayBoot=00:00:00
+   OverSubscribe=OK Contiguous=0 Licenses=(null) Network=(null)
+   Command=bash
+   WorkDir=/data/cephfs-1/home/users/holtgrem_c
+   Power=
+```
+
+👉 [Slurm Documentation: `scontrol`](https://slurm.schedmd.com/scontrol.html)
+
+## Observing a job's states 🤸 (1/4)
+
+The job in PENDING state
+
+```{.bash code-line-numbers="1-2|5,7-8,11|14"}
+holtgrem_c@hpc-cpu-141$ scontrol show job 14629381
+JobId=14629381 JobName=bash
+   UserId=holtgrem_c(100131) GroupId=hpc-ag-cubi(1005272) MCS_label=N/A
+   Priority=661 Nice=0 Account=hpc-ag-cubi QOS=normal
+   JobState=PENDING Reason=Priority Dependency=(null)
+   Requeue=1 Restarts=0 BatchFlag=0 Reboot=0 ExitCode=0:0
+   RunTime=00:00:00 TimeLimit=02:00:00 TimeMin=N/A
+   SubmitTime=2023-07-11T15:26:33 EligibleTime=2023-07-11T15:26:33
+   AccrueTime=Unknown
+   StartTime=Unknown EndTime=Unknown Deadline=N/A
+   SuspendTime=None SecsPreSuspend=0 LastSchedEval=2023-07-11T15:26:33 Scheduler=Main
+   Partition=short AllocNode:Sid=hpc-login-1:3644832
+   ReqNodeList=(null) ExcNodeList=(null)
+   NodeList=
+   NumNodes=1 NumCPUs=1 NumTasks=1 CPUs/Task=1 ReqB:S:C:T=0:0:*:*
+   TRES=cpu=1,mem=10G,node=1,billing=1
+   Socks/Node=* NtasksPerN:B:S:C=0:0:*:* CoreSpec=*
+   MinCPUsNode=1 MinMemoryNode=10G MinTmpDiskNode=0
+   Features=(null) DelayBoot=00:00:00
+   OverSubscribe=OK Contiguous=0 Licenses=(null) Network=(null)
+   Command=bash
+   WorkDir=/data/cephfs-1/home/users/holtgrem_c
+   Power=
+```
+
+## Observing a job's states 🤸 (2/4)
+
+The job while running on a node:
+
+```{.bash code-line-numbers="5|7-11|14-15"}
+holtgrem_c@hpc-cpu-141$ scontrol show job 14629381
+JobId=14629381 JobName=bash
+   UserId=holtgrem_c(100131) GroupId=hpc-ag-cubi(1005272) MCS_label=N/A
+   Priority=661 Nice=0 Account=hpc-ag-cubi QOS=normal
+   JobState=RUNNING Reason=None Dependency=(null)
+   Requeue=1 Restarts=0 BatchFlag=0 Reboot=0 ExitCode=0:0
+   RunTime=00:05:04 TimeLimit=02:00:00 TimeMin=N/A
+   SubmitTime=2023-07-11T15:26:33 EligibleTime=2023-07-11T15:26:33
+   AccrueTime=2023-07-11T15:26:33
+   StartTime=2023-07-11T15:26:53 EndTime=2023-07-11T17:26:53 Deadline=N/A
+   SuspendTime=None SecsPreSuspend=0 LastSchedEval=2023-07-11T15:26:53 Scheduler=Backfill
+   Partition=short AllocNode:Sid=hpc-login-1:3644832
+   ReqNodeList=(null) ExcNodeList=(null)
+   NodeList=hpc-cpu-144
+   BatchHost=hpc-cpu-144
+   NumNodes=1 NumCPUs=1 NumTasks=1 CPUs/Task=1 ReqB:S:C:T=0:0:*:*
+   TRES=cpu=1,mem=10G,node=1,billing=1
+   Socks/Node=* NtasksPerN:B:S:C=0:0:*:* CoreSpec=*
+   MinCPUsNode=1 MinMemoryNode=10G MinTmpDiskNode=0
+   Features=(null) DelayBoot=00:00:00
+   OverSubscribe=OK Contiguous=0 Licenses=(null) Network=(null)
+   Command=bash
+   WorkDir=/data/cephfs-1/home/users/holtgrem_c
+   Power=
+```
+
+## Observing a job's states 🤸 (3/4)
+
+The job "just" after being terminated:
+
+```{.bash code-line-numbers="5|7-11"}
+holtgrem_c@hpc-cpu-141$ scontrol show job 14629381
+JobId=14629381 JobName=bash
+   UserId=holtgrem_c(100131) GroupId=hpc-ag-cubi(1005272) MCS_label=N/A
+   Priority=661 Nice=0 Account=hpc-ag-cubi QOS=normal
+   JobState=COMPLETED Reason=None Dependency=(null)
+   Requeue=1 Restarts=0 BatchFlag=0 Reboot=0 ExitCode=0:0
+   RunTime=00:07:52 TimeLimit=02:00:00 TimeMin=N/A
+   SubmitTime=2023-07-11T15:26:33 EligibleTime=2023-07-11T15:26:33
+   AccrueTime=2023-07-11T15:26:33
+   StartTime=2023-07-11T15:26:53 EndTime=2023-07-11T15:34:45 Deadline=N/A
+   SuspendTime=None SecsPreSuspend=0 LastSchedEval=2023-07-11T15:26:53 Scheduler=Backfill
+   Partition=short AllocNode:Sid=hpc-login-1:3644832
+   ReqNodeList=(null) ExcNodeList=(null)
+   NodeList=hpc-cpu-144
+   BatchHost=hpc-cpu-144
+   NumNodes=1 NumCPUs=1 NumTasks=1 CPUs/Task=1 ReqB:S:C:T=0:0:*:*
+   TRES=cpu=1,mem=10G,node=1,billing=1
+   Socks/Node=* NtasksPerN:B:S:C=0:0:*:* CoreSpec=*
+   MinCPUsNode=1 MinMemoryNode=10G MinTmpDiskNode=0
+   Features=(null) DelayBoot=00:00:00
+   OverSubscribe=OK Contiguous=0 Licenses=(null) Network=(null)
+   Command=bash
+   WorkDir=/data/cephfs-1/home/users/holtgrem_c
+   Power=
+```
+
+## Observing a job's states 🤸 (4/4)
+
+After some time, the job is not known to the [controller]{.fragment .highlight-red} any more...
+
+```{.bash}
+holtgrem_c@hpc-cpu-141$ scontrol show job 14629381
+slurm_load_jobs error: Invalid job id specified
+```
+
+... but we can still get some information from the [accounting]{.fragment .highlight-red} (for 4 weeks) ...
+
+```{.bash}
+holtgrem_c@hpc-cpu-141$ sacct -j 14629381
+JobID           JobName  Partition    Account  AllocCPUS      State ExitCode
+------------ ---------- ---------- ---------- ---------- ---------- --------
+14629381           bash      short hpc-ag-cu+          1  COMPLETED      0:0
+14629381.ex+     extern            hpc-ag-cu+          1  COMPLETED      0:0
+14629381.0         bash            hpc-ag-cu+          1  COMPLETED      0:0
+```
+
+You can use `sacct -j JOBID --long | less -SR` to see all available accounting information.
+
+## Our First Batch Job 🎬 (1/5)
+
+```{.bash code-line-numbers="1-6|7|8|9|11"}
+holtgrem_c@hpc-login-1$ cat >first-job.sh <<"EOF"
+#!/usr/bin/bash
+
+echo "Hello World"
+sleep 1min
+EOF
+holtgrem_c@hpc-login-1$ sbatch first-job.sh
+sbatch: You did not specify a running time. Defaulting to two days.
+sbatch: routed your job to partition medium
+sbatch:
+Submitted batch job 14629473
+```
+
+## Our First Batch Job 🎬 (2/5)
+
+Sadly, it failed:
+
+```{.bash code-line-numbers="5|22|23|24,26"}
+holtgrem_c@hpc-login-1$ scontrol show job 14629473
+JobId=14629473 JobName=first-job.sh
+   UserId=holtgrem_c(100131) GroupId=hpc-ag-cubi(1005272) MCS_label=N/A
+   Priority=761 Nice=0 Account=hpc-ag-cubi QOS=normal
+   JobState=FAILED Reason=NonZeroExitCode Dependency=(null)
+   Requeue=1 Restarts=0 BatchFlag=1 Reboot=0 ExitCode=1:0
+   RunTime=00:00:00 TimeLimit=2-00:00:00 TimeMin=N/A
+   SubmitTime=2023-07-11T15:44:31 EligibleTime=2023-07-11T15:44:31
+   AccrueTime=2023-07-11T15:44:31
+   StartTime=2023-07-11T15:44:54 EndTime=2023-07-11T15:44:54 Deadline=N/A
+   SuspendTime=None SecsPreSuspend=0 LastSchedEval=2023-07-11T15:44:54 Scheduler=Backfill
+   Partition=medium AllocNode:Sid=hpc-login-1:3644832
+   ReqNodeList=(null) ExcNodeList=(null)
+   NodeList=hpc-cpu-219
+   BatchHost=hpc-cpu-219
+   NumNodes=1 NumCPUs=1 NumTasks=1 CPUs/Task=1 ReqB:S:C:T=0:0:*:*
+   TRES=cpu=1,mem=1G,node=1,billing=1
+   Socks/Node=* NtasksPerN:B:S:C=0:0:*:* CoreSpec=*
+   MinCPUsNode=1 MinMemoryCPU=1G MinTmpDiskNode=0
+   Features=(null) DelayBoot=00:00:00
+   OverSubscribe=OK Contiguous=0 Licenses=(null) Network=(null)
+   Command=/data/cephfs-1/home/users/holtgrem_c/first-job.sh
+   WorkDir=/data/cephfs-1/home/users/holtgrem_c
+   StdErr=/data/cephfs-1/home/users/holtgrem_c/slurm-14629473.out
+   StdIn=/dev/null
+   StdOut=/data/cephfs-1/home/users/holtgrem_c/slurm-14629473.out
+   Power=
+```
+
+## Our First Batch Job 🎬 (3/5)
+
+Troubleshooting our job failure:
+
+```{.bash code-line-numbers="1|2|3-4|"}
+holtgrem_c@hpc-login-1$ cat /data/cephfs-1/home/users/holtgrem_c/slurm-14629473.out
+Hello World
+sleep: invalid time interval ‘1min’
+Try 'sleep --help' for more information.
+```
+
+## Our First Batch Job 🎬 (4/5)
+
+More troubleshooting hints:
+
+1. `scontrol | grep Reason`
+    - NonZeroExitCode? Timeout? Out of memory?
+2. Does `WorkDir` exist and do you have access?
+    - Try: `cd $WorkDir`
+3. Look at the `StdOut`/`StdErr` log files, if any.
+4. Look at `sacct -j 14629473 --format=JobID,State,ExitCode,Elapsed,MaxVMSize` to look for hints regarding running time/memory (VM) size
+
+## Our First Batch Job 🎬 (5/5)
+
+```{.bash code-line-numbers="1-6|7|8|9|11"}
+holtgrem_c@hpc-login-1$ cat >first-job.sh <<"EOF"
+#!/usr/bin/bash
+
+echo "Hello World"
+sleep 1m
+EOF
+holtgrem_c@hpc-login-1$ sbatch first-job.sh
+sbatch: You did not specify a running time. Defaulting to two days.
+sbatch: routed your job to partition medium
+sbatch:
+Submitted batch job 14629474
+```
+
+👉[hpc-docs: sbatch](https://hpc-docs.cubi.bihealth.org/slurm/commands-sbatch/)<br>
+👉[hpc-docs: srun](https://hpc-docs.cubi.bihealth.org/slurm/commands-srun/)
+
+## Resource Allocation with `srun`/`sbatch`
+
+We can explicitely allocate resources with the `srun` and `sbatch` command lines:
+
+- `--job-name=MY-JOB-NAME`: explicit naming
+- `--time=D-HH:MM:SS`: max running time
+- `--partition=PARTITION`: partition
+- `--mem=MEMORY`: allocate memory, use `<num>G` or `<num>M`
+- `--cpus-per-task=CORES`: number of cores to allocate
+
+👉 [Slurm Documentation: sbatch](https://slurm.schedmd.com/sbatch.html)
+
+## Resource Allocation in Job Scripts
+
+```{.bash code-line-numbers="1|2|4|5|6|7|8"}
+holtgrem_c@hpc-login-1$ cat >first-job.sh <<"EOF"
+#!/usr/bin/bash
+
+#SBATCH --job-name=tired-but-extravagent
+#SBATCH --time=0:05:00
+#SBATCH --partition=short
+#SBATCH --mem=2G
+#SBATCH --cpus-per-task=4
+
+echo "I will waste 2GB of RAM and 4 corse for 1 min..."
+sleep 1m
+EOF
+```
+
+## Your Turn: Writing Job Scripts 🤸
+
+Write a job script that ...
+
+1. allocates **minimal** memory for `sleep 1m` (hint: how can you figure out the maximal memory used?)
+2. writes separate stdout and stderr files (where could this be useful?)
+3. is called `job-1.sh` that triggers `job-2.sh` on completion (is this useful? dangerous?)
+
+Use online resources to figure out the right command line parameters.
+
+## Your Turn: 👀 Staring at the Scheduler 🤸
+
+Use the following commands and use the online help and `man $command` to figure out the output:
+
+- `sdiag`
+- `squeue`
+- `sinfo`
+- `scontrol show node NODE`
+- `sprio -l -S -y`
+
+## Your Turn: 👓 Staring at the Scheduler 🤸
+
+Use the following commands and use the online help and `man $command` to figure out the output:
+
+- `sdiag`
+    - quick look to see scheduler status and load
+- `squeue`
+    - investigate current queue status
+- `sinfo`
+    - get an overview of nodes' health and load
+- `scontrol show node NODE`
+    - look at node health and load
+- `sprio -l -S -y`
+    - look at current scheduler priorities for jobs
+
+## Your Turn: Make it Fail! 🤸
+
+Provoke the following situations:
+
+1. Work directory does not exist.
+2. Work directory exists but you have no access.
+3. Stdout/stderr files cannot be written
+4. Too many cores allocated (try: 100)
+5. Job needs too much memory (allocate 500MB, [then use this](https://unix.stackexchange.com/a/254976))
+6. Job runs into timeout
+
+In each case, look at `scontrol`/`sacct` output and look at log files.
+
+## Slurm Partitions
+
+- TODO: explain in general
+- TODO: explain on HPC cluster
+
+## Tuning `squeue` Output
+
+TODO
+
+e.g.,
+
+```
+squeue -o "%.10i %9P %60j %10u %.2t %.10M %.6D %.4C %20R %b" "$@"
+```
+
+use `-u $USER`
+
+use `|less -S`
+
+Your turn 🤸: look at `man squeue` and find your "top 3 most useful" values.
+
+## Useful `.bashrc` Aliases
+
+```bash
+alias sbi='srun --pty --time 7-00 --mem=5G --cpus-per-task 2 bash -i'
+alias slurm-loginx='srun --pty --time 7-00 --partition long --x11 bash -i'
+alias sq='squeue -o "%.10i %9P %60j %10u %.2t %.10M %.6D %.4C %20R %b" "$@"'
+alias sql='sq "$@" | less -S'
+alias sqme='sq -u holtgrem_c "$@"'
+alias sqmel='sqme "$@" | less -S'
+```
+
+## The Role of Logging
+
+- TODO: troubleshooting
+- TODO: post mortem analysis
+- TODO: explain `set -x` and `set -v`
+- TODO: explain about flushing to disk etc.
+- TODO: [stdbuf](https://stackoverflow.com/questions/1429951/force-flushing-of-output-to-a-file-while-bash-script-is-still-running)
+
+## Job Script Temporary File Handling
+
+```{.bash code-line-numbers="5-6|7-8|3|10"}
+#!/usr/bin/bash
+
+# ... prelude that does not need $TMPDIR ...
+
+# Create new unique directory below current `$TMPDIR`.
+export TMPDIR=$(mktemp -d)
+# Setup auto-cleanup of the just-created `$TMPDIR`.
+trap "rm -rf $TMPDIR" ERR EXIT
+
+# ... your usual script ...
+```
+
+## Submitting GPU Jobs
+
+- TODO: describe how to allocate 1 GPU
+- TODO: describe need to setup software
+- TODO: show how this looks like and tell ppl. about limited GPU availability
+
+👉 [hpc-docs: How-To: Connect to GPU Nodes](https://hpc-docs.cubi.bihealth.org/how-to/connect/gpu-nodes/)
+
+## Submitting High Memory Jobs
+
+- TODO: describe use/risk
+- TODO: describe need to keep memory low
+- TODO: describe possibility of CPU overcommittment but not RAM overcommittment
+
+## Canceling Jobs with `scancel`
+
+- TODO: explain
+- TODO: explain people how to write loops with `squeue`
+
+Your turn 🤸: submit a job, cancel it, look at `scontrol` and `sacct` output.
+
+## QOS and `sacctmgr`
+
+TODO: explain
+
+```
+holtgrem_c@hpc-login-1$ sacctmgr show qos -p | cut -d '|' -f 1,19,20 | column -s '|' -t
+Name             MaxWall      MaxTRESPU
+normal                        cpu=512,mem=3.50T
+debug            01:00:00     cpu=1000,mem=7000G
+medium           7-00:00:00   cpu=512,mem=3.50T
+critical                      cpu=12000,mem=84000G
+long             14-00:00:00  cpu=64,mem=448G
+highmem
+gpu-interactive  01:00:00
+short            04:00:00     cpu=2000,mem=14000G
+gpu              7-00:00:00
+staging          14-00:00:00  cpu=4000,mem=28000G
+```
+
+## Job Dependencies with `sbatch`
+
+- TODO: explain
+- TODO: explain use case to repeat things ;-)
+
+Your turn 🤸: write two jobs with `-d afterok:JOBID`
+
+## X11 Forwarding with Slurm
+
+- TODO: explain need
+- TODO: explain prerequites
+- TODO: show
+
+Your turn 🤸: start `xterm` if you have an local X11 server.
+
+## Reservations
+
+- TODO: explain meaning
+- TODO: show example of training reservation
+
+```
+holtgrem_c@hpc-login-1$ scontrol show reservation
+ReservationName=svc-bih-cubi-demux_c_6 StartTime=2022-08-26T12:54:31 EndTime=2023-08-26T12:54:31 Duration=365-00:00:00
+   Nodes=hpc-cpu-207 NodeCnt=1 CoreCnt=16 Features=(null) PartitionName=(null) Flags=SPEC_NODES
+   TRES=cpu=32
+   Users=svc-bih-cubi-demux_c Groups=(null) Accounts=(null) Licenses=(null) State=ACTIVE BurstBuffer=(null) Watts=n/a
+   MaxStartDelay=(null)
+```
+
+## Conda {.inverse background-color="#70ADC1"}
+
+- Introduction
+- Installation
+- Managing environments and instaling software
+
+## Software Installation
+
+:::: {.columns}
+
+::: {.column width="60%"}
+
+A challenge[?]{.fragment .highlight-red}
+Some options:
+
+- By hand: `make install`
+  - [Old-school 📼 💾 📠]{.fragment} [(dependencies 😱)]{.fragment}
+- On your laptop: `sudo apt install`
+  - [⛔ you don't get `root` on the HPC]{.fragment}
+- [Easybuild / environment modules](https://easybuild.io/)
+  - [More old school pain]{.fragment}
+- [Guix](https://guix.gnu.org/)
+  - [🤓 too nerdy(?)]{.fragment}
+- [🐍 Conda](https://docs.conda.io/en/latest/)
+  - [bioconda channel]{.fragment} [👉 bioconda Homepage](http://bioconda.github.io/){.fragment}
+  - [Snakemake support (more of this later)]{.fragment}
+
+:::
+
+::: {.column width="40%"}
+
+![](img/01-slurm/installer-example.png)
+
+:::
+
+::::
+
+## What is Conda?
+
+> Conda is an open-source, cross-platform, language-agnostic package manager and environment management system.
+
+-- Wikipedia
+
+<hr>
+
+**Conda allows you to**:
+
+- install [many]{.fragment .highlight-red} [precompiled]{.fragment .highlight-red} packages [on your own]{.fragment .highlight-red}
+- more than 8.5k bioinformatics packages via `bioconda` channel
+- manage [distinct environment]{.fragment .highlight-red}
+  - e.g., separate by project if you want to pin versions
+
+
+Plus, it [integrates well into Snakemake]{.fragment .highlight-red} (more about that later)
+
+## First Steps: Installation 🤸
+
+Use the following steps for installation:
+
+```{.bash code-line-numbers="1|2|4|5-6|7|8|9"}
+# on login node
+srun --partition=training --mem=5G --pty bash -i
+
+# on a compute node
+wget -O /tmp/Miniforge3-Linux-x86_64.sh \
+  https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
+mkdir -p $HOME/work/miniconda3
+ln -sr $HOME/work/miniconda3 $HOME/miniconda3
+bash /tmp/Miniforge3-Linux-x86_64.sh -s -b -p $HOME/work/miniconda3
+```
+
+Configure:
+
+```{.bash}
+conda config --add channels defaults
+conda config --add channels bioconda
+conda config --add channels conda-forge
+conda config --set channel_priority strict
+cat ~/.condarc
+```
+
+Now you can activate it with
+
+```{.bash code-line-numbers="1|2"}
+source ~/miniconda3/bin/activate
+mamba --help
+```
+
+👉 [Mamba User Guide](https://mamba.readthedocs.io/en/latest/user_guide/concepts.html)
+
+## Second Steps: Managing Environments
+
+Creating an environment:
+
+```{.bash}
+mamba create --yes --name read-mapping bwa samtools
+conda activate read-mapping
+## or: source ~/miniconda3/bin/activate read-mapping
+```
+
+Showing what is installed:
+
+```{.bash}
+conda env export | tee env.yaml
+# OUTPUT:
+name: read-mapping
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - _libgcc_mutex=0.1=conda_forge
+
+```
+
+## Second Steps: Create New Environment
+
+## Second Steps: Installing Software
+
+## Apptainer {.inverse background-color="#70ADC1"}
+
+- Introduction
+- Running `.sif` files with Apptainer
+- Building `.sif` files from Docker containers
+- Building `.sif` files from scratch
+
+## Running `.sif` Image Files
+
+## Converting Docker Image to `.sif` Files
+
+## Building `.sif` Images from Scratch
+
+## Bring Your Own Project {.inverse background-color="#70ADC1"}
+
+🫵 Where can you apply what you have learned in your PhD project?
+
+## This is not the end...
+
+... but all for this session
+
+__Recap__
+
+- Slurm
+  - Introduction
+  - Interactive and Batch Jobs
+  - Query slurm for job and cluster status
+  - Troubleshooting! 😱 🥸 🤓
+- Conda
+  - Installation and managing environments
+- Apptainer
+  - Introduction
+  - Building and Running Images
