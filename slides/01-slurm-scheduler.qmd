@@ -596,6 +596,119 @@ ReservationName=svc-bih-cubi-demux_c_6 StartTime=2022-08-26T12:54:31 EndTime=202
 - Installation
 - Managing environments and instaling software
 
+## Software Installation
+
+:::: {.columns}
+
+::: {.column width="60%"}
+
+A challenge[?]{.fragment .highlight-red}
+Some options:
+
+- By hand: `make install`
+  - [Old-school 📼 💾 📠]{.fragment} [(dependencies 😱)]{.fragment}
+- On your laptop: `sudo apt install`
+  - [⛔ you don't get `root` on the HPC]{.fragment}
+- [Easybuild / environment modules](https://easybuild.io/)
+  - [More old school pain]{.fragment}
+- [Guix](https://guix.gnu.org/)
+  - [🤓 too nerdy(?)]{.fragment}
+- [🐍 Conda](https://docs.conda.io/en/latest/)
+  - [bioconda channel]{.fragment} [👉 bioconda Homepage](http://bioconda.github.io/){.fragment}
+  - [Snakemake support (more of this later)]{.fragment}
+
+:::
+
+::: {.column width="40%"}
+
+![](img/01-slurm/installer-example.png)
+
+:::
+
+::::
+
+## What is Conda?
+
+> Conda is an open-source, cross-platform, language-agnostic package manager and environment management system.
+
+-- Wikipedia
+
+<hr>
+
+**Conda allows you to**:
+
+- install [many]{.fragment .highlight-red} [precompiled]{.fragment .highlight-red} packages [on your own]{.fragment .highlight-red}
+- more than 8.5k bioinformatics packages via `bioconda` channel
+- manage [distinct environment]{.fragment .highlight-red}
+  - e.g., separate by project if you want to pin versions
+
+
+Plus, it [integrates well into Snakemake]{.fragment .highlight-red} (more about that later)
+
+## First Steps: Installation 🤸
+
+Use the following steps for installation:
+
+```{.bash code-line-numbers="1|2|4|5-6|7|8|9"}
+# on login node
+srun --partition=training --mem=5G --pty bash -i
+
+# on a compute node
+wget -O /tmp/Miniforge3-Linux-x86_64.sh \
+  https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
+mkdir -p $HOME/work/miniconda3
+ln -sr $HOME/work/miniconda3 $HOME/miniconda3
+bash /tmp/Miniforge3-Linux-x86_64.sh -s -b -p $HOME/work/miniconda3
+```
+
+Configure:
+
+```{.bash}
+conda config --add channels defaults
+conda config --add channels bioconda
+conda config --add channels conda-forge
+conda config --set channel_priority strict
+cat ~/.condarc
+```
+
+Now you can activate it with
+
+```{.bash code-line-numbers="1|2"}
+source ~/miniconda3/bin/activate
+mamba --help
+```
+
+👉 [Mamba User Guide](https://mamba.readthedocs.io/en/latest/user_guide/concepts.html)
+
+## Second Steps: Managing Environments
+
+Creating an environment:
+
+```{.bash}
+mamba create --yes --name read-mapping bwa samtools
+conda activate read-mapping
+## or: source ~/miniconda3/bin/activate read-mapping
+```
+
+Showing what is installed:
+
+```{.bash}
+conda env export | tee env.yaml
+# OUTPUT:
+name: read-mapping
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - _libgcc_mutex=0.1=conda_forge
+
+```
+
+## Second Steps: Create New Environment
+
+## Second Steps: Installing Software
+
 ## Apptainer {.inverse background-color="#70ADC1"}
 
 - Introduction
